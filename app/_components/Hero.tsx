@@ -12,9 +12,7 @@ export default function Hero() {
         </h1>
 
         <p className="mx-auto mt-4 max-w-prose text-base text-slate-600 sm:text-lg/relaxed">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque,
-          nisi. Natus, provident accusamus impedit minima harum corporis
-          iusto.
+          Make Your Financial Plan and Save Millions of Money. Best App for Money Tracking.
         </p>
 
         <div className="mt-8 flex justify-center gap-4">
