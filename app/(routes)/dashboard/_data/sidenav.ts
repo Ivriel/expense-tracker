@@ -1,4 +1,4 @@
-import { BarChart3, LayoutGrid, PiggyBank, ReceiptText, ShieldCheck } from "lucide-react";
+import { BarChart3, LayoutGrid, PiggyBank, ReceiptText } from "lucide-react";
 
 export const SidenavMenuList = [
   {
