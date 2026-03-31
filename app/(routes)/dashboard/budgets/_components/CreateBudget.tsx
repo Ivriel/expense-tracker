@@ -2,7 +2,9 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -22,7 +24,7 @@ export default function CreateBudget() {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [isOpen,setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   const resetForm = () => {
@@ -34,14 +36,14 @@ export default function CreateBudget() {
     setIsOpen(false);
   };
 
-  async function onCreateBudget(name:string,amount:number,icon:string) {
+  async function onCreateBudget(name: string, amount: number, icon: string) {
     try {
       setIsLoading(true);
       const result = await createBudget({ name, amount, icon });
       if (result.success) {
         toast.success(result.message);
-        setIsOpen(false)
-        router.refresh()
+        setIsOpen(false);
+        router.refresh();
       } else {
         toast.error(result.message);
       }
@@ -50,15 +52,15 @@ export default function CreateBudget() {
       toast.error("Failed to create budget");
     } finally {
       setIsLoading(false);
-      resetForm()
+      resetForm();
     }
   }
 
   return (
-    <div>
+    <div className="h-full">
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <div className="border-2 border-dashed flex flex-col items-center justify-center p-5 mt-5 rounded-lg hover:bg-slate-100 hover:shadow-md cursor-pointer">
+          <div className="h-full border-2 border-dashed flex flex-col items-center justify-center p-5 rounded-lg hover:bg-slate-100 hover:shadow-md cursor-pointer">
             <h2 className="text-3xl">+</h2>
             <h2 className="text-lg">Create New Budget</h2>
           </div>
@@ -89,12 +91,13 @@ export default function CreateBudget() {
             <div className="mt-2">
               <Label
                 htmlFor="budget-name"
-                className="text-black font-medium my-1"
+                className="text-slate-600 font-semibold mb-2 block"
               >
                 Budget Name
               </Label>
               <Input
                 id="budget-name"
+                className="mt-1 focus-visible:ring-purple-400"
                 placeholder="e.g. Groceries"
                 onChange={(e) => setName(e.target.value)}
               />
@@ -102,7 +105,7 @@ export default function CreateBudget() {
             <div className="mt-2">
               <Label
                 htmlFor="budget-amount"
-                className="text-black font-medium my-1"
+                className="text-slate-600 font-semibold mb-2 block"
               >
                 Budget Amount
               </Label>
@@ -110,17 +113,27 @@ export default function CreateBudget() {
                 id="budget-amount"
                 placeholder="e.g. 10000"
                 type="number"
+                className="mt-1 focus-visible:ring-purple-400"
                 onChange={(e) => setAmount(Number(e.target.value))}
               />
             </div>
-            <Button
-              onClick={() => onCreateBudget(name,amount,emojiIcon)}
-              disabled={!(name && amount) || isLoading}
-              className="w-full mt-5 bg-purple-500 cursor-pointer hover:bg-purple-600"
-            >
-              {isLoading ? <Loader2 className="size-4 animate-spin"/> : "Create Budget"}
-            </Button>
           </div>
+          <DialogFooter className="sm:justify-start">
+             <Button
+                onClick={() => onCreateBudget(name, amount, emojiIcon)}
+                disabled={!(name && amount) || isLoading}
+                className={`bg-purple-500 hover:bg-purple-600 ${isLoading || !(name && amount) ? "cursor-not-allowed" : "cursor-pointer"}`}
+              >
+                {isLoading ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  "Create Budget"
+                )}
+              </Button>
+            <DialogClose asChild>
+             <Button variant="outline" className="cursor-pointer hover:bg-slate-200">Close</Button>
+            </DialogClose>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

@@ -1,8 +1,9 @@
 "use server"
 
 import { db } from "@/db/drizzle"
-import { budgets, InsertBudget } from "@/db/schema"
+import { Budget, budgets, expenses, InsertBudget } from "@/db/schema"
 import { currentUser } from "@clerk/nextjs/server"
+import { eq, getTableColumns, sql } from "drizzle-orm"
 
 
 export const createBudget = async (data: Omit<InsertBudget, "id" | "createdAt" | "createdBy">) => {
@@ -22,3 +23,27 @@ export const createBudget = async (data: Omit<InsertBudget, "id" | "createdAt" |
         return { success: false, message: "Failed to create budget" }
     }
 }
+
+export const getAllBudget = async() => {
+    try {
+        const user = await currentUser()
+        const result = await db.select({
+            ...getTableColumns(budgets),//mengambil semua kolom dari sebuah tabel secara otomatis dan menyebarkan semua kolom tabel budgets ke dalam select object, jadi kamu tidak perlu tulis satu-satu seperti id, name, amount, dll.
+            totalSpend:sql `sum(${expenses.amount})`.mapWith(Number), // ngitung jumlah amount nya (total jumlah pengeluaran) map with adalah method Drizzle untuk mengkonversi hasil query ke tipe JavaScript Number, karena hasil dari SQL aggregate function biasanya return sebagai string
+            totalItems:sql `count(${expenses.id})`.mapWith(Number) //ngitung total barisnya. jumlah baris expense yang terhubung ke budget
+        }).from(budgets)
+        .leftJoin(expenses,eq(budgets.id,expenses.budgetId)) // ambil semua budget, dan jika ada expense yang budgetId-nya cocok dengan budgets.id, gabungkan datanya. Budget yang tidak punya expense tetap muncul (karena LEFT JOIN).
+        .groupBy(budgets.id) // Karena kita pakai SUM() dan COUNT() (aggregate functions), data harus dikelompokkan. Di sini dikelompokkan per budgets.id sehingga setiap budget punya satu baris dengan total spend dan total items-nya sendiri
+        .where(eq(budgets.createdBy,user?.primaryEmailAddress?.emailAddress ?? ""))
+        console.log(result)
+        return { success: true, message: "Budget fetched successfully", result: result }
+    } catch (error) {
+        console.log(error)
+        return { success: false, message: "Failed to fetch budget" }
+    }
+}
+
+export type BudgetWithStats = Budget & {
+  totalSpend: number | null;
+  totalItems: number;
+};
