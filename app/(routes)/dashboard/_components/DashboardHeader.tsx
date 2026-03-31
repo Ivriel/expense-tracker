@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function DashboardHeader() {
   return (
-    <header className='p-5 shadow-sm border-b flex justify-between'>
+    <header className='p-4 flex justify-between items-center'>
         <div>
             Search Bar
         </div>
