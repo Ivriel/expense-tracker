@@ -3,7 +3,7 @@
 import { db } from "@/db/drizzle"
 import { Budget, budgets, expenses, InsertBudget } from "@/db/schema"
 import { currentUser } from "@clerk/nextjs/server"
-import { eq, getTableColumns, sql } from "drizzle-orm"
+import {  desc, eq, getTableColumns, sql } from "drizzle-orm"
 
 
 export const createBudget = async (data: Omit<InsertBudget, "id" | "createdAt" | "createdBy">) => {
@@ -35,6 +35,7 @@ export const getAllBudget = async() => {
         .leftJoin(expenses,eq(budgets.id,expenses.budgetId)) // ambil semua budget, dan jika ada expense yang budgetId-nya cocok dengan budgets.id, gabungkan datanya. Budget yang tidak punya expense tetap muncul (karena LEFT JOIN).
         .groupBy(budgets.id) // Karena kita pakai SUM() dan COUNT() (aggregate functions), data harus dikelompokkan. Di sini dikelompokkan per budgets.id sehingga setiap budget punya satu baris dengan total spend dan total items-nya sendiri
         .where(eq(budgets.createdBy,user?.primaryEmailAddress?.emailAddress ?? ""))
+        .orderBy(desc(budgets.createdAt))
         console.log(result)
         return { success: true, message: "Budget fetched successfully", result: result }
     } catch (error) {

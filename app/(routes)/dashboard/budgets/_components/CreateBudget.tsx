@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export default function CreateBudget() {
+export default function CreateBudget({ refreshData }: { refreshData: () => void }) {
   const [emojiIcon, setEmojiIcon] = useState("💰");
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
   const [name, setName] = useState("");
@@ -41,6 +41,7 @@ export default function CreateBudget() {
       setIsLoading(true);
       const result = await createBudget({ name, amount, icon });
       if (result.success) {
+        refreshData()
         toast.success(result.message);
         setIsOpen(false);
         router.refresh();

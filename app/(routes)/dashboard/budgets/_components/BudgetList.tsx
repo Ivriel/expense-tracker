@@ -1,10 +1,10 @@
 "use client"
-import React, { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CreateBudget from "./CreateBudget";
 import { getAllBudget, BudgetWithStats } from "@/server/budget";
 import { useUser } from "@clerk/nextjs";
-import { Loader2 } from "lucide-react";
 import BudgetItem from "./BudgetItem";
+import BudgetListSkeleton from "./BudgetListSkeleton";
 
 // Budget dari query join punya field tambahan yang tidak ada di schema inferSelect
 
@@ -12,32 +12,32 @@ import BudgetItem from "./BudgetItem";
 export default function BudgetList() {
   const { user } = useUser();
   const [budgetList, setBudgetList] = useState<BudgetWithStats[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // true = skeleton langsung tampil sebelum fetch selesai
+
+  // fetchBudgets didefinisikan di level komponen agar bisa di-pass sebagai prop
+  const fetchBudgets = useCallback(async () => {
+    if (!user) return;
+    setLoading(true);
+    const response = await getAllBudget();
+    if (response?.success && response.result) {
+      setBudgetList(response.result as BudgetWithStats[]);
+    }
+    setLoading(false);
+  }, [user]);
 
   useEffect(() => {
-    if (!user) return;
-
-    // Definisikan fungsi async di dalam effect — pattern yang direkomendasikan React
-    const fetchBudgets = async () => {
-      setLoading(true);
-      const response = await getAllBudget();
-      if (response?.success && response.result) {
-        setBudgetList(response.result as BudgetWithStats[]);
-      }
-      setLoading(false);
-    };
-
     fetchBudgets();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (
     <div className="mt-7">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch">
-        <CreateBudget />
+        <CreateBudget refreshData={fetchBudgets} />
         {loading ? (
-          <div className="col-span-full flex items-center justify-center">
-            <Loader2 className="size-8 animate-spin" />
-          </div>
+         [1,2,3,4,5].map((item,index)=>(
+            <BudgetListSkeleton key={index}/>
+         ))
         ) : (
           budgetList.map((budget, index) => (
         <BudgetItem budget={budget} key={index} />
