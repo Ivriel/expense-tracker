@@ -37,11 +37,6 @@ export function AppSidebar() {
                     isActive={path === item.path}
                     tooltip={item.name}
                     size="lg"
-                    className={
-                      path === item.path
-                        ? "bg-purple-500 text-white hover:bg-purple-600 hover:text-white"
-                        : "text-gray-500 hover:text-purple-500"
-                    }
                   >
                     <Link href={item.path}>
                       <item.icon />

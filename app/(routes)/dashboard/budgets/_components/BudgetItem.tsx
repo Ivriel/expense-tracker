@@ -1,4 +1,5 @@
 import { BudgetWithStats } from "@/server/budget";
+import Link from "next/link";
 
 export default function BudgetItem({ budget }: { budget: BudgetWithStats }) {
   const totalSpend = budget.totalSpend || 0;
@@ -7,7 +8,10 @@ export default function BudgetItem({ budget }: { budget: BudgetWithStats }) {
   const isOverBudget = totalSpend > budget.amount;
 
   return (
-    <div className="group relative p-5 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer overflow-hidden">
+    <Link
+      href={`/dashboard/expenses/${budget.id}`}
+      className="h-[200px] group relative p-5 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer overflow-hidden"
+    >
       {/* Subtle top accent line */}
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-purple-400 via-purple-600 to-violet-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
 
@@ -18,7 +22,9 @@ export default function BudgetItem({ budget }: { budget: BudgetWithStats }) {
             {budget?.icon}
           </div>
           <div>
-            <h2 className="font-semibold text-slate-800 leading-tight">{budget.name}</h2>
+            <h2 className="font-semibold text-slate-800 leading-tight">
+              {budget.name}
+            </h2>
             <p className="text-xs text-slate-400 mt-0.5">
               {budget.totalItems} {budget.totalItems === 1 ? "item" : "items"}
             </p>
@@ -38,14 +44,19 @@ export default function BudgetItem({ budget }: { budget: BudgetWithStats }) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs text-slate-400">Used</p>
-            <p className={`text-sm font-semibold ${isOverBudget ? "text-red-500" : "text-slate-700"}`}>
+            <p
+              className={`text-sm font-semibold ${isOverBudget ? "text-red-500" : "text-slate-700"}`}
+            >
               Rp {totalSpend.toLocaleString("id-ID")}
             </p>
           </div>
           <div className="text-right">
             <p className="text-xs text-slate-400">Remaining</p>
-            <p className={`text-sm font-semibold ${isOverBudget ? "text-red-500" : "text-emerald-600"}`}>
-              {isOverBudget ? "- " : ""}Rp {Math.abs(remaining).toLocaleString("id-ID")}
+            <p
+              className={`text-sm font-semibold ${isOverBudget ? "text-red-500" : "text-emerald-600"}`}
+            >
+              {isOverBudget ? "- " : ""}Rp{" "}
+              {Math.abs(remaining).toLocaleString("id-ID")}
             </p>
           </div>
         </div>
@@ -57,8 +68,8 @@ export default function BudgetItem({ budget }: { budget: BudgetWithStats }) {
               isOverBudget
                 ? "bg-red-400"
                 : spendPercent > 80
-                ? "bg-amber-400"
-                : "bg-linear-to-r from-purple-400 to-violet-500"
+                  ? "bg-amber-400"
+                  : "bg-linear-to-r from-purple-400 to-violet-500"
             }`}
             style={{ width: `${spendPercent}%` }}
           />
@@ -69,6 +80,6 @@ export default function BudgetItem({ budget }: { budget: BudgetWithStats }) {
           {spendPercent.toFixed(0)}% Used
         </p>
       </div>
-    </div>
+    </Link>
   );
 }
