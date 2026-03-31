@@ -9,6 +9,8 @@ export const budgets = pgTable('budgets', {
     createdBy: varchar('created_by').notNull()
 });
 
+export type InsertBudget = typeof budgets.$inferInsert;
+
 export const schema = {
     budgets
 }
