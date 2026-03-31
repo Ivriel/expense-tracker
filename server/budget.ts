@@ -3,7 +3,7 @@
 import { db } from "@/db/drizzle"
 import { Budget, budgets, expenses, InsertBudget } from "@/db/schema"
 import { currentUser } from "@clerk/nextjs/server"
-import {  desc, eq, getTableColumns, sql } from "drizzle-orm"
+import {  and, desc, eq, getTableColumns, sql } from "drizzle-orm"
 
 
 export const createBudget = async (data: Omit<InsertBudget, "id" | "createdAt" | "createdBy">) => {
@@ -41,6 +41,32 @@ export const getAllBudget = async() => {
     } catch (error) {
         console.log(error)
         return { success: false, message: "Failed to fetch budget" }
+    }
+}
+
+// id diterima sebagai string (dari URL params), lalu dikonversi ke number untuk query
+export const getBudgetInfo = async (id: string) => {
+    try {
+        const user = await currentUser()
+        const result = await db.select({
+                ...getTableColumns(budgets),
+                totalSpend: sql`sum(${expenses.amount})`.mapWith(Number),
+                totalItems: sql`count(${expenses.id})`.mapWith(Number)
+            }).from(budgets)
+            .leftJoin(expenses, eq(budgets.id, expenses.budgetId))
+            .groupBy(budgets.id)
+            .where(
+                // and() untuk menggabungkan dua kondisi where sekaligus
+                and(
+                    eq(budgets.createdBy, user?.primaryEmailAddress?.emailAddress ?? ""),
+                    eq(budgets.id, parseInt(id)) // id dari URL selalu string, budgets.id number
+                )
+            )
+            console.log(result)
+        return { success: true, result: result[0] ?? null }
+    } catch (error) {
+        console.log(error)
+        return { success: false, message: "Failed to fetch budget info" }
     }
 }
 
