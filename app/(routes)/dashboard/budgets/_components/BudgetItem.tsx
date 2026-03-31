@@ -2,10 +2,28 @@ import { BudgetWithStats } from "@/server/budget";
 import Link from "next/link";
 
 export default function BudgetItem({ budget }: { budget: BudgetWithStats }) {
+  // --- 3C: LOGIKA KALKULASI ---
   const totalSpend = budget.totalSpend || 0;
   const remaining = budget.amount - totalSpend;
+  
+  // Math.min memastikan bar tidak "jebol" keluar kotak (max 100%)
   const spendPercent = Math.min((totalSpend / budget.amount) * 100, 100);
+  
   const isOverBudget = totalSpend > budget.amount;
+
+  // --- 4E: LOGIKA WARNA (VERSI GAMPANG DIBACA) ---
+  // Kita tentukan warna di sini, bukan di dalam return
+  const getStatusColor = () => {
+    if (isOverBudget) {
+      return "bg-red-400"; // Warna merah kalau boncos
+    }
+    if (spendPercent > 80) {
+      return "bg-amber-400"; // Warna kuning kalau udah mau habis (warning)
+    }
+    return "bg-linear-to-r from-purple-400 to-violet-500"; // Warna ungu kalau aman
+  };
+
+  const statusColor = getStatusColor();
 
   return (
     <Link
@@ -33,6 +51,7 @@ export default function BudgetItem({ budget }: { budget: BudgetWithStats }) {
         <div className="text-right shrink-0">
           <p className="text-xs text-slate-400 mb-0.5">Budget</p>
           <h2 className="font-bold text-purple-600 text-base leading-tight">
+            {/* 4C: Format Mata Uang Indonesia */}
             Rp {budget.amount?.toLocaleString("id-ID")}
           </h2>
         </div>
@@ -40,22 +59,18 @@ export default function BudgetItem({ budget }: { budget: BudgetWithStats }) {
 
       {/* Stats & Progress */}
       <div className="mt-5 space-y-2.5">
-        {/* Spend info row */}
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs text-slate-400">Used</p>
-            <p
-              className={`text-sm font-semibold ${isOverBudget ? "text-red-500" : "text-slate-700"}`}
-            >
+            <p className={`text-sm font-semibold ${isOverBudget ? "text-red-500" : "text-slate-700"}`}>
               Rp {totalSpend.toLocaleString("id-ID")}
             </p>
           </div>
           <div className="text-right">
             <p className="text-xs text-slate-400">Remaining</p>
-            <p
-              className={`text-sm font-semibold ${isOverBudget ? "text-red-500" : "text-emerald-600"}`}
-            >
+            <p className={`text-sm font-semibold ${isOverBudget ? "text-red-500" : "text-emerald-600"}`}>
               {isOverBudget ? "- " : ""}Rp{" "}
+              {/* 4C: Math.abs agar angka negatif jadi positif (minusnya kita tulis manual di atas) */}
               {Math.abs(remaining).toLocaleString("id-ID")}
             </p>
           </div>
@@ -64,13 +79,8 @@ export default function BudgetItem({ budget }: { budget: BudgetWithStats }) {
         {/* Progress bar */}
         <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
           <div
-            className={`h-2 rounded-full transition-all duration-500 ${
-              isOverBudget
-                ? "bg-red-400"
-                : spendPercent > 80
-                  ? "bg-amber-400"
-                  : "bg-linear-to-r from-purple-400 to-violet-500"
-            }`}
+            /* 4E: Menggunakan variabel statusColor yang sudah rapi */
+            className={`h-2 rounded-full transition-all duration-500 ${statusColor}`}
             style={{ width: `${spendPercent}%` }}
           />
         </div>
