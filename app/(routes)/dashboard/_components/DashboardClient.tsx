@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import CardInfoDashboard from "./CardInfoDashboard";
 import { BudgetWithStats, getAllBudget } from "@/server/budget";
 import BarchartDashboard from "./BarChartDashboard";
+import BudgetItem from "../budgets/_components/BudgetItem";
 
 interface Props {
   userName: string;
@@ -46,8 +47,7 @@ export default function DashboardClient({ userName }: Props) {
   return (
     <div className="p-5">
       <h1 className="font-bold text-3xl">
-        {getGreeting()},{" "}
-        <span className="text-purple-600">{userName}</span>{" "}
+        {getGreeting()}, <span className="text-purple-600">{userName}</span>{" "}
         {emoteGreeting()}
       </h1>
       <p className="text-gray-600">
@@ -56,11 +56,15 @@ export default function DashboardClient({ userName }: Props) {
         <span className="text-purple-600 font-bold">expense tracker</span>
       </p>
       <CardInfoDashboard budgetList={budgetList} loading={loading} />
-      <div className="grid grid-cols-1 md:grid-cols-3 mt-2">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-2">
         <div className="md:col-span-2 pt-2">
           <BarchartDashboard budgetList={budgetList} />
         </div>
-        <div>Other Content</div>
+        <div>
+          {budgetList.map((budget, index) => (
+            <BudgetItem key={index} budget={budget} />
+          ))}
+        </div>
       </div>
     </div>
   );
