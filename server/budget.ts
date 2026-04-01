@@ -87,6 +87,24 @@ export const deleteBudget = async(budgetId:number)=> {
     }
 }
 
+export const editBudget = async(budgetId:number,data:Omit<InsertBudget, "id" | "createdAt" | "createdBy">)=> {
+    try {
+        const user = await currentUser()
+        const result = await db.update(budgets)
+         .set(data)
+         .where(
+            and(
+                eq(budgets.createdBy, user?.primaryEmailAddress?.emailAddress ?? ""),
+                eq(budgets.id, budgetId) 
+            )
+        ).returning({updatedId:budgets.id})
+        return { success: true, message: "Budget updated successfully", result: result }
+    } catch (error) {
+        console.log(error)
+        return { success: false, message: "Failed to update budget" }
+    }
+}
+
 export type BudgetWithStats = Budget & {
   totalSpend: number | null;
   totalItems: number;

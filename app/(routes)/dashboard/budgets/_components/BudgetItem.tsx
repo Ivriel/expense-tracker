@@ -50,7 +50,7 @@ export default function BudgetItem({ budget }: { budget: BudgetWithStats }) {
           </div>
         </div>
         <div className="text-right shrink-0">
-          <p className="text-xs text-slate-400 mb-0.5">Budget</p>
+          <p className="text-xs font-bold text-black mb-0.5">Budget</p>
           <h2 className="font-bold text-purple-600 text-base leading-tight">
             {/* 4C: Format Mata Uang Indonesia */}
             Rp {budget.amount?.toLocaleString("id-ID")}

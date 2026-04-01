@@ -1,4 +1,5 @@
 "use client"
+"use no memo" // Opt-out from React Compiler to silence the TanStack Table warning
 
 import {
     ColumnDef,

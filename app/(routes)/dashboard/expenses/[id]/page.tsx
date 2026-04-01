@@ -18,6 +18,7 @@ import { getAllExpensesByBudgetId } from "@/server/expense";
 import { Expense } from "@/db/schema";
 import ExpenseListByBudgetIdTable from "../_components/ExpenseListByBudgetIdTable";
 import DeleteBudgetButton from "../_components/DeleteBudgetButton";
+import EditBudget from "../_components/EditBudget";
 
 export default function ExpenseDetailPage({
   params,
@@ -74,9 +75,20 @@ export default function ExpenseDetailPage({
       </Breadcrumb>
 
       <div className="flex items-center justify-between mt-5 mb-5">
-        <h2 className="text-2xl font-bold">Expenses Manager for <span className="text-purple-600">{budgetInfo?.name}</span></h2>
+  <h2 className="text-2xl font-bold">
+    Expenses Manager for <span className="text-purple-600">{budgetInfo?.name}</span>
+  </h2>
+  
+  <div className="flex items-center gap-2">
+    {budgetInfo && (
+      <>
+        <EditBudget budget={budgetInfo} refreshData={getBudgetInformation} />
         <DeleteBudgetButton budgetId={Number(id)} />
-      </div>
+      </>
+    )}
+  </div>
+</div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 mt-6 gap-5">
         {budgetInfo ? (
           <BudgetItem budget={budgetInfo} />
