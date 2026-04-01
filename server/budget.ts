@@ -70,6 +70,23 @@ export const getBudgetInfo = async (id: string) => {
     }
 }
 
+export const deleteBudget = async(budgetId:number)=> {
+    try {
+        const user = await currentUser()
+        await db.delete(budgets)
+         .where(
+            and(
+                eq(budgets.createdBy, user?.primaryEmailAddress?.emailAddress ?? ""),
+                eq(budgets.id, budgetId) 
+            )
+        ).returning({deletedId:budgets.id})
+        return { success: true, message: "Budget deleted successfully" }
+    } catch (error) {
+        console.log(error)
+        return { success: false, message: "Failed to delete budget" }
+    }
+}
+
 export type BudgetWithStats = Budget & {
   totalSpend: number | null;
   totalItems: number;

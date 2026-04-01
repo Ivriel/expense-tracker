@@ -87,7 +87,7 @@ export default function AddExpense({
       <Button
         onClick={() => addNewExpense()}
         disabled={isLoading || !(name && amount)}
-        className="w-full mt-3 cursor-pointer bg-purple-500 hover:bg-purple-600"
+        className="w-full mt-3 cursor-pointer bg-purple-500 hover:bg-purple-600 py-5"
       >
         {isLoading ? <Loader2 className="size-4 animate-spin" /> : "Add New Expense"}
       </Button>

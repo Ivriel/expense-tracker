@@ -17,6 +17,7 @@ import {
 import { getAllExpensesByBudgetId } from "@/server/expense";
 import { Expense } from "@/db/schema";
 import ExpenseListByBudgetIdTable from "../_components/ExpenseListByBudgetIdTable";
+import DeleteBudgetButton from "../_components/DeleteBudgetButton";
 
 export default function ExpenseDetailPage({
   params,
@@ -25,7 +26,9 @@ export default function ExpenseDetailPage({
 }) {
   const { id } = use(params);
   const [budgetInfo, setBudgetInfo] = useState<BudgetWithStats | null>(null);
-  const [expensesListByBudgetId, setExpensesListByBudgetId] = useState<Expense[] | null>(null);
+  const [expensesListByBudgetId, setExpensesListByBudgetId] = useState<
+    Expense[] | null
+  >(null);
 
   const getAllExpenses = async () => {
     const response = await getAllExpensesByBudgetId(Number(id));
@@ -70,7 +73,10 @@ export default function ExpenseDetailPage({
         </BreadcrumbList>
       </Breadcrumb>
 
-      <h2 className="text-2xl font-bold mt-5 mb-5">My Expenses</h2>
+      <div className="flex items-center justify-between mt-5 mb-5">
+        <h2 className="text-2xl font-bold">Expenses Manager for <span className="text-purple-600">{budgetInfo?.name}</span></h2>
+        <DeleteBudgetButton budgetId={Number(id)} />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 mt-6 gap-5">
         {budgetInfo ? (
           <BudgetItem budget={budgetInfo} />
@@ -82,7 +88,10 @@ export default function ExpenseDetailPage({
 
       <div className="mt-4">
         <h2 className="font-bold text-lg">All Expenses</h2>
-        <ExpenseListByBudgetIdTable expensesListByBudgetId={expensesListByBudgetId} refreshData={getBudgetInformation} />
+        <ExpenseListByBudgetIdTable
+          expensesListByBudgetId={expensesListByBudgetId}
+          refreshData={getBudgetInformation}
+        />
       </div>
     </div>
   );

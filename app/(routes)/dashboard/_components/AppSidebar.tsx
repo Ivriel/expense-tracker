@@ -29,7 +29,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-2">
               {SidenavMenuList.map((item) => (
                 <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton
