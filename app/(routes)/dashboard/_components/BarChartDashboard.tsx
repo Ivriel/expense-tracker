@@ -61,27 +61,29 @@ export default function BarchartDashboard({ budgetList }: { budgetList: BudgetWi
       <h2 className="text-left text-lg font-bold mb-2 shrink-0 text-purple-700">
         Budget & Spend Visualisation
       </h2>
-      <div ref={containerRef} className="flex-1 w-full min-h-0">
-        {chartWidth > 0 && chartHeight > 0 && (
-          <BarChart
-            width={chartWidth}
-            height={chartHeight}
-            data={budgetList}
-            margin={{ top: 5, right: 8, left: 0, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis tickFormatter={formatRupiah} />
-            <Tooltip
-              formatter={(value) => `Rp ${Number(value).toLocaleString('id-ID')}`}
-              labelFormatter={(label) => `Budget: ${label}`}
-            />
-            <Legend />
-            {/* Tambah prop name= supaya muncul di tooltip */}
-            <Bar dataKey="totalSpend" name="Total Spend" fill="#8884d8" />
-            <Bar dataKey="amount" name="Amount" fill="#82ca9d" />
-          </BarChart>
-        )}
+      <div className="relative flex-1 w-full min-h-0">
+        <div ref={containerRef} className="absolute inset-0">
+          {chartWidth > 0 && chartHeight > 0 && (
+            <BarChart
+              width={chartWidth}
+              height={chartHeight}
+              data={budgetList}
+              margin={{ top: 5, right: 8, left: 0, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis tickFormatter={formatRupiah} />
+              <Tooltip
+                formatter={(value) => `Rp ${Number(value).toLocaleString('id-ID')}`}
+                labelFormatter={(label) => `Budget: ${label}`}
+              />
+              <Legend />
+              {/* Tambah prop name= supaya muncul di tooltip */}
+              <Bar dataKey="totalSpend" name="Total Spend" fill="#8884d8" />
+              <Bar dataKey="amount" name="Amount" fill="#82ca9d" />
+            </BarChart>
+          )}
+        </div>
       </div>
     </div>
   )
