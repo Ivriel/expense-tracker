@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { BudgetWithStats } from '@/server/budget'
 import { PiggyBank, Receipt, Wallet, Eye, EyeOff } from 'lucide-react'
 
-export default function CardInfo({ budgetList, loading }: {
+export default function CardInfoDashboard({ budgetList, loading }: {
   budgetList: BudgetWithStats[];
   loading: boolean;
 }) {

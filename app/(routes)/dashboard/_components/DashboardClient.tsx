@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import CardInfo from "./CardInfoDashboard";
+import CardInfoDashboard from "./CardInfoDashboard";
 import { BudgetWithStats, getAllBudget } from "@/server/budget";
 import BarchartDashboard from "./BarChartDashboard";
 
@@ -53,9 +53,9 @@ export default function DashboardClient({ userName }: Props) {
       <p className="text-gray-600">
         Buat anggaran, atur keuangan, dan pantau pengeluaran Anda dengan mudah
         menggunakan{" "}
-        <span className="text-purple-600 font-bold">expense tracker</span>.
+        <span className="text-purple-600 font-bold">expense tracker</span>
       </p>
-      <CardInfo budgetList={budgetList} loading={loading} />
+      <CardInfoDashboard budgetList={budgetList} loading={loading} />
       <div className="grid grid-cols-1 md:grid-cols-3 mt-2">
         <div className="md:col-span-2 pt-2">
           <BarchartDashboard budgetList={budgetList} />
