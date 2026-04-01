@@ -60,8 +60,8 @@ export default function DashboardClient({ userName }: Props) {
         <div className="md:col-span-2 pt-2">
           <BarchartDashboard budgetList={budgetList} />
         </div>
-        <div>
-          {budgetList.map((budget, index) => (
+        <div className="flex flex-col gap-4 pt-2">
+          {budgetList.slice(0, 2).map((budget, index) => (
             <BudgetItem key={index} budget={budget} />
           ))}
         </div>
