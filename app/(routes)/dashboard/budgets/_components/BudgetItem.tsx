@@ -5,10 +5,11 @@ export default function BudgetItem({ budget }: { budget: BudgetWithStats }) {
   // --- 3C: LOGIKA KALKULASI ---
   const totalSpend = budget.totalSpend || 0;
   const remaining = budget.amount - totalSpend;
-  
+
   // Math.min memastikan bar tidak "jebol" keluar kotak (max 100%)
   const spendPercent = Math.min((totalSpend / budget.amount) * 100, 100);
-  
+  const remainingPercent = Math.min((remaining / budget.amount) * 100, 100);
+
   const isOverBudget = totalSpend > budget.amount;
 
   // --- 4E: LOGIKA WARNA (VERSI GAMPANG DIBACA) ---
@@ -28,7 +29,7 @@ export default function BudgetItem({ budget }: { budget: BudgetWithStats }) {
   return (
     <Link
       href={`/dashboard/expenses/${budget.id}`}
-      className="h-[200px] group relative p-5 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer overflow-hidden"
+      className="group relative p-5 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer overflow-hidden"
     >
       {/* Subtle top accent line */}
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-purple-400 via-purple-600 to-violet-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
@@ -62,13 +63,17 @@ export default function BudgetItem({ budget }: { budget: BudgetWithStats }) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs text-slate-400">Used</p>
-            <p className={`text-sm font-semibold ${isOverBudget ? "text-red-500" : "text-slate-700"}`}>
+            <p
+              className={`text-sm font-semibold ${isOverBudget ? "text-red-500" : "text-slate-700"}`}
+            >
               Rp {totalSpend.toLocaleString("id-ID")}
             </p>
           </div>
           <div className="text-right">
             <p className="text-xs text-slate-400">Remaining</p>
-            <p className={`text-sm font-semibold ${isOverBudget ? "text-red-500" : "text-emerald-600"}`}>
+            <p
+              className={`text-sm font-semibold ${isOverBudget ? "text-red-500" : "text-emerald-600"}`}
+            >
               {isOverBudget ? "- " : ""}Rp{" "}
               {/* 4C: Math.abs agar angka negatif jadi positif (minusnya kita tulis manual di atas) */}
               {Math.abs(remaining).toLocaleString("id-ID")}
@@ -85,10 +90,16 @@ export default function BudgetItem({ budget }: { budget: BudgetWithStats }) {
           />
         </div>
 
-        {/* Percent label */}
-        <p className="text-xs text-slate-400 text-right">
-          {spendPercent.toFixed(0)}% Used
-        </p>
+        <div className="flex justify-between items-center">
+          {/* Percent label */}
+
+          <p className="text-xs text-slate-400">
+            {spendPercent.toFixed(2)}% Used
+          </p>
+          <p className="text-xs text-slate-400 text-right">
+            {remainingPercent.toFixed(2)}% Remaining
+          </p>
+        </div>
       </div>
     </Link>
   );

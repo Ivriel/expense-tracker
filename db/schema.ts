@@ -13,7 +13,9 @@ export const expenses = pgTable('expenses',{
     id:serial('id').primaryKey(),
     name:varchar('name',{length:255}).notNull(),
     amount: bigint('amount', { mode: 'number' }).notNull().default(0),
-    budgetId:integer('budget_id').references(()=>budgets.id),
+    budgetId:integer('budget_id').references(()=>budgets.id,{onDelete:'cascade'
+        
+    }),
     createdAt:timestamp('created_at').defaultNow(),
     createdBy:varchar('created_by').notNull()
 });

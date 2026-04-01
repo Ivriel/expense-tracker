@@ -13,8 +13,8 @@ export default function DashboardLayout({
     <TooltipProvider>
       <SidebarProvider>
         <AppSidebar />
-        <div className="flex flex-col flex-1 min-w-0">
-          <div className="flex items-center border-b">
+        <div className="flex flex-col flex-1 min-w-0 min-h-screen">
+          <div className="sticky top-0 z-50 flex items-center border-b bg-white">
             <SidebarTrigger className="ml-2 shrink-0 cursor-pointer" />
             <div className="flex-1">
               <DashboardHeader />

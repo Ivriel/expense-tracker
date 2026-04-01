@@ -14,6 +14,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { getAllExpensesByBudgetId } from "@/server/expense";
+import { Expense } from "@/db/schema";
+import ExpenseListByBudgetIdTable from "../_components/ExpenseListByBudgetIdTable";
 
 export default function ExpenseDetailPage({
   params,
@@ -22,11 +25,20 @@ export default function ExpenseDetailPage({
 }) {
   const { id } = use(params);
   const [budgetInfo, setBudgetInfo] = useState<BudgetWithStats | null>(null);
+  const [expensesListByBudgetId, setExpensesListByBudgetId] = useState<Expense[] | null>(null);
+
+  const getAllExpenses = async () => {
+    const response = await getAllExpensesByBudgetId(Number(id));
+    if (response.success) {
+      setExpensesListByBudgetId(response.result ?? []);
+    }
+  };
 
   const getBudgetInformation = async () => {
     const result = await getBudgetInfo(id);
     if (result.success) {
       setBudgetInfo(result.result ?? null);
+      getAllExpenses();
     }
   };
 
@@ -53,9 +65,7 @@ export default function ExpenseDetailPage({
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>
-              {budgetInfo?.name ?? "Loading..."}
-            </BreadcrumbPage>
+            <BreadcrumbPage>{budgetInfo?.name ?? "Loading..."}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -68,6 +78,11 @@ export default function ExpenseDetailPage({
           <BudgetListSkeleton />
         )}
         <AddExpense budgetId={Number(id)} refreshData={getBudgetInformation} />
+      </div>
+
+      <div className="mt-4">
+        <h2 className="font-bold text-lg">All Expenses</h2>
+        <ExpenseListByBudgetIdTable expensesListByBudgetId={expensesListByBudgetId} refreshData={getBudgetInformation} />
       </div>
     </div>
   );
