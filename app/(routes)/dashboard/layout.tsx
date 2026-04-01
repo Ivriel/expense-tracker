@@ -3,6 +3,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppSidebar } from "./_components/AppSidebar";
 import DashboardHeader from "./_components/DashboardHeader";
+import CustomSidebarTrigger from "./_components/CustomSidebarTrigger";
 
 export default function DashboardLayout({
   children,
@@ -15,7 +16,7 @@ export default function DashboardLayout({
         <AppSidebar />
         <div className="flex flex-col flex-1 min-w-0 min-h-screen">
           <div className="sticky top-0 z-50 flex items-center border-b bg-white">
-            <SidebarTrigger className="ml-2 shrink-0 cursor-pointer" />
+            <CustomSidebarTrigger />
             <div className="flex-1">
               <DashboardHeader />
             </div>

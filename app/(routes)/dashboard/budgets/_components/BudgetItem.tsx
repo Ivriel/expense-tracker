@@ -27,6 +27,7 @@ export default function BudgetItem({ budget }: { budget: BudgetWithStats }) {
   const statusColor = getStatusColor();
 
   return (
+    // tambahin kolom created at coba
     <Link
       href={`/dashboard/expenses/${budget.id}`}
       className="group relative p-5 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer overflow-hidden"
