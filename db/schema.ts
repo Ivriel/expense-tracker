@@ -32,8 +32,11 @@ export type InsertBudget = typeof budgets.$inferInsert;
 export type Budget = typeof budgets.$inferSelect;
 export type InsertExpense = typeof expenses.$inferInsert;
 export type Expense = typeof expenses.$inferSelect;
+export type InsertIncome = typeof incomes.$inferInsert;
+export type Income = typeof incomes.$inferSelect;
 
 export const schema = {
+    incomes,
     budgets,
     expenses
 }

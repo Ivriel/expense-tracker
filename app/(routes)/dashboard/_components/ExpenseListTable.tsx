@@ -77,7 +77,17 @@ export const createDashboardColumns = (
   },
   {
     accessorKey: "createdAt",
-    header: "Created At",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Created At
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ row }) => {
       const date = row.getValue("createdAt") as Date | null;
       if (!date) return <div>-</div>;
@@ -108,14 +118,18 @@ export const createDashboardColumns = (
   },
 ];
 
+import ExpenseTableSkeleton from "../expenses/_components/ExpenseTableSkeleton";
+
 export default function ExpenseListTable({
   expenseList,
   budgetList,
   refreshData,
+  loading = false,
 }: {
   expenseList: Expense[];
   budgetList?: { id: number; name: string }[];
   refreshData: () => void;
+  loading?: boolean;
 }) {
   const columns = createDashboardColumns(refreshData);
 
@@ -126,6 +140,10 @@ export default function ExpenseListTable({
       budgetName: budget?.name || null,
     };
   });
+
+  if (loading) {
+    return <ExpenseTableSkeleton />;
+  }
 
   return (
     <div className="mt-3">

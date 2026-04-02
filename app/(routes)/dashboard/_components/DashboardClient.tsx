@@ -20,7 +20,6 @@ export default function DashboardClient({ userName }: Props) {
   const [loading, setLoading] = useState(true);
 
   const fetchExpenses = useCallback(async () => {
-    setLoading(true);
     const response = await getAllExpenses();
     if (response?.success && response.result) {
       setExpenseList(response.result as Expense[]);
@@ -33,10 +32,11 @@ export default function DashboardClient({ userName }: Props) {
     const response = await getAllBudget();
     if (response?.success && response.result) {
       setBudgetList(response.result as BudgetWithStats[]);
-      fetchExpenses();
+      await fetchExpenses();
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
-  }, []);
+  }, [fetchExpenses]);
 
   useEffect(() => {
     fetchBudgets();
@@ -87,6 +87,7 @@ export default function DashboardClient({ userName }: Props) {
           expenseList={expenseList.slice(0, 5)} 
           budgetList={budgetList}
           refreshData={fetchExpenses} 
+          loading={loading}
         />
       </div>
     </div>

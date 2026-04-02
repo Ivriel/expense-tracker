@@ -87,7 +87,7 @@ export const deleteBudget = async(budgetId:number)=> {
     }
 }
 
-export const editBudget = async(budgetId:number,data:Omit<InsertBudget, "id" | "createdAt" | "createdBy">)=> {
+export const updateBudget = async(budgetId:number,data:Omit<InsertBudget, "id" | "createdAt" | "createdBy">)=> {
     try {
         const user = await currentUser()
         const result = await db.update(budgets)

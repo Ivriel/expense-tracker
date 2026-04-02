@@ -1,5 +1,6 @@
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import ExpenseTableSkeleton from "../expenses/_components/ExpenseTableSkeleton";
 
 export default function DashboardSkeleton() {
   return (
@@ -71,6 +72,10 @@ export default function DashboardSkeleton() {
             </div>
           ))}
         </div>
+      </div>
+      <div className="mt-8 mb-4">
+        <h2 className="font-bold text-xl mb-3 text-purple-600">Last Expenses</h2>
+        <ExpenseTableSkeleton />
       </div>
     </div>
   );

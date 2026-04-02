@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Edit2, Loader2 } from "lucide-react";
-import { BudgetWithStats, editBudget } from "@/server/budget";
+import { BudgetWithStats, updateBudget } from "@/server/budget";
 import {
   Dialog,
   DialogClose,
@@ -44,7 +44,7 @@ export default function EditBudget({
   async function onEditBudget(name: string, amount: number, icon: string) {
     try {
       setIsLoading(true);
-      const result = await editBudget(budget.id, {
+      const result = await updateBudget(budget.id, {
         name,
         amount,
         icon,
