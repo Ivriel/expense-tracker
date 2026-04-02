@@ -1,7 +1,27 @@
-import React from 'react'
+import { BudgetWithStats, getAllBudget } from "@/server/budget";
+import { getAllExpenses } from "@/server/expense";
+import React from "react";
+import ExpensesClient from "./_components/ExpensesClient";
+import { Expense } from "@/db/schema";
 
-export default function ExpensesPage() {
+export default async function ExpensesPage() {
+  const expensesRes = await getAllExpenses();
+  const budgetsRes = await getAllBudget();
+
+  const expenseList = (expensesRes?.result || []) as Expense[];
+  const budgetList = (budgetsRes?.result || []) as BudgetWithStats[];
+
   return (
-    <div>ExpensesPage</div>
-  )
+    <div className="p-8">
+      <h2 className="font-bold text-3xl text-purple-600">All Expenses</h2>
+      <p className="text-gray-500">
+        Laporan penuh mendetail seluruh transaksi dari semua budget Anda.
+      </p>
+
+      <ExpensesClient 
+        expenseList={expenseList} 
+        budgetList={budgetList} 
+      />
+    </div>
+  );
 }

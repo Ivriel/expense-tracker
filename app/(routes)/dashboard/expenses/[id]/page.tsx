@@ -99,7 +99,7 @@ export default function ExpenseDetailPage({
       </div>
 
       <div className="mt-4">
-        <h2 className="font-bold text-lg">All Expenses</h2>
+        <h2 className="font-bold text-2xl">All <span className="text-purple-600">Expenses</span></h2>
         <ExpenseListByBudgetIdTable
           expensesListByBudgetId={expensesListByBudgetId}
           refreshData={getBudgetInformation}

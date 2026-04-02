@@ -35,9 +35,11 @@ export default function BarchartDashboard({ budgetList }: { budgetList: BudgetWi
     // ResizeObserver dengan debounce 300ms
     // Sidebar transition = 200ms, jadi chart TIDAK re-render selama animasi
     // Baru update width setelah animasi selesai
+    let isMounted = true;
     const observer = new ResizeObserver((entries) => {
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
+        if (!isMounted) return;
         for (const entry of entries) {
           const w = entry.contentRect.width;
           const h = entry.contentRect.height;
@@ -50,13 +52,14 @@ export default function BarchartDashboard({ budgetList }: { budgetList: BudgetWi
     observer.observe(el);
 
     return () => {
+      isMounted = false;
       observer.disconnect();
       clearTimeout(debounceTimer);
     };
   }, []);
 
   return (
-    <div className='w-full h-full border rounded-lg p-5 flex flex-col'>
+    <div className='w-full h-[400px] border rounded-lg p-5 flex flex-col'>
       {/* Judul chart — taruh di luar container chart */}
       <h2 className="text-left text-lg font-bold mb-2 shrink-0 text-purple-700">
         Budget & Spend Visualisation

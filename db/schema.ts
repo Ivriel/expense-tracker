@@ -1,5 +1,13 @@
 import { pgTable,bigint, serial, timestamp, integer, varchar } from "drizzle-orm/pg-core";
 
+export const incomes = pgTable('incomes',{
+    id:serial('id').primaryKey(),
+    name:varchar('name',{length:255}).notNull(),
+    amount:bigint('amount',{mode:'number'}).notNull().default(0),
+    createdAt:timestamp('created_at').defaultNow(),
+    createdBy:varchar('created_by').notNull()
+})
+
 export const budgets = pgTable('budgets', {
     id: serial('id').primaryKey(),
     name: varchar('name', { length: 255 }).notNull(),

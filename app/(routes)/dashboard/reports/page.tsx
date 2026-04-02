@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function Reports() {
-  return <div>Reports</div>;
+export default function ReportsPage() {
+  return <div>ReportsPage</div>;
 }

@@ -82,7 +82,7 @@ export default function DashboardClient({ userName }: Props) {
       </div>
       
       <div className="mt-6 mb-4">
-        <h2 className="font-bold text-xl mb-3 text-purple-600">Pengeluaran Terakhir</h2>
+        <h2 className="font-bold text-xl mb-3 text-purple-600">Last Expenses</h2>
         <ExpenseListTable 
           expenseList={expenseList.slice(0, 5)} 
           budgetList={budgetList}

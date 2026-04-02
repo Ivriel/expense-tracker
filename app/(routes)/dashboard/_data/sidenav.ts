@@ -1,4 +1,4 @@
-import { BarChart3, LayoutGrid, PiggyBank, ReceiptText } from "lucide-react";
+import { BanknoteArrowDown, BanknoteArrowUp, BarChart3, LayoutGrid, PiggyBank } from "lucide-react";
 
 export const SidenavMenuList = [
   {
@@ -8,19 +8,25 @@ export const SidenavMenuList = [
     path:'/dashboard'
   },
   {
-    id: 2,
+    id:2,
+    name:'Income',
+    icon:BanknoteArrowUp,
+    path:'/dashboard/income'
+  },
+  {
+    id: 3,
     name: "Budgets",
     icon:PiggyBank,
     path:'/dashboard/budgets'
   },
   {
-    id: 3,
+    id: 4,
     name: "Expenses",
-    icon:ReceiptText,
+    icon:BanknoteArrowDown,
     path:'/dashboard/expenses'
   },
   {
-    id:4,
+    id:5,
     name:"Reports",
     icon:BarChart3,
     path:'/dashboard/reports'

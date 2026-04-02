@@ -1,9 +1,13 @@
 "use client";
 
 import { Expense } from "@/db/schema";
+import React from "react";
 import { DataTable } from "../expenses/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import DeleteExpenseButton from "../expenses/_components/DeleteExpenseButton";
+import { ArrowUpDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 type ExpenseTable = Expense & { budgetName: string | null };
 
@@ -12,11 +16,31 @@ export const createDashboardColumns = (
 ): ColumnDef<ExpenseTable>[] => [
   {
     accessorKey: "name",
-    header: "Name",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "amount",
-    header: "Expense Amount",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Expense Amount
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ row }) => {
       const amount = row.getValue("amount") as number;
       const formatted = new Intl.NumberFormat("id-ID", {
@@ -24,18 +48,30 @@ export const createDashboardColumns = (
         currency: "IDR",
         minimumFractionDigits: 0,
       }).format(amount);
-      return <div className="font-medium">{formatted}</div>;
+      return <div className="font-medium mr-4">{formatted}</div>;
     },
   },
   {
     accessorKey: "budgetName",
-    header: "From Budget Of",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          From Budget Of
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ row }) => {
       const budgetName = row.getValue("budgetName") as string | null;
       return (
-        <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-purple-100 text-purple-800">
+       <Link href={`/dashboard/expenses/${row.original.budgetId}`}>
+        <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-purple-100 text-purple-800 ml-4">
           {budgetName || "-"}
         </span>
+       </Link>
       );
     },
   },
