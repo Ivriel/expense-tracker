@@ -5,6 +5,9 @@ import CardInfoDashboard from "./CardInfoDashboard";
 import { BudgetWithStats, getAllBudget } from "@/server/budget";
 import BarchartDashboard from "./BarChartDashboard";
 import BudgetItem from "../budgets/_components/BudgetItem";
+import { Expense } from "@/db/schema";
+import { getAllExpenses } from "@/server/expense";
+import ExpenseListTable from "./ExpenseListTable";
 
 interface Props {
   userName: string;
@@ -13,13 +16,24 @@ interface Props {
 
 export default function DashboardClient({ userName }: Props) {
   const [budgetList, setBudgetList] = useState<BudgetWithStats[]>([]);
+  const [expenseList, setExpenseList] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const fetchExpenses = useCallback(async () => {
+    setLoading(true);
+    const response = await getAllExpenses();
+    if (response?.success && response.result) {
+      setExpenseList(response.result as Expense[]);
+    }
+    setLoading(false);
+  }, []);
 
   const fetchBudgets = useCallback(async () => {
     setLoading(true);
     const response = await getAllBudget();
     if (response?.success && response.result) {
       setBudgetList(response.result as BudgetWithStats[]);
+      fetchExpenses();
     }
     setLoading(false);
   }, []);
@@ -57,7 +71,7 @@ export default function DashboardClient({ userName }: Props) {
       </p>
       <CardInfoDashboard budgetList={budgetList} loading={loading} />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-2">
-        <div className="md:col-span-2 pt-2">
+        <div className="lg:col-span-2 pt-2">
           <BarchartDashboard budgetList={budgetList} />
         </div>
         <div className="flex flex-col gap-4 pt-2">
@@ -65,6 +79,15 @@ export default function DashboardClient({ userName }: Props) {
             <BudgetItem key={index} budget={budget} />
           ))}
         </div>
+      </div>
+      
+      <div className="mt-6 mb-4">
+        <h2 className="font-bold text-xl mb-3 text-purple-600">Pengeluaran Terakhir</h2>
+        <ExpenseListTable 
+          expenseList={expenseList.slice(0, 5)} 
+          budgetList={budgetList}
+          refreshData={fetchExpenses} 
+        />
       </div>
     </div>
   );

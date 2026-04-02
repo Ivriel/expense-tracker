@@ -39,6 +39,22 @@ export const getAllExpensesByBudgetId = async(budgetId:number)=> {
     }
 }
 
+export const getAllExpenses = async()=> {
+    try {
+        const user = await currentUser()
+        const result = await db.select().from(expenses)
+         .where(
+            eq(expenses.createdBy, user?.primaryEmailAddress?.emailAddress ?? "")
+        )
+        .orderBy(desc(expenses.createdAt))
+        console.log("result",result)
+        return { success: true, message: "Expenses fetched successfully", result: result }
+    } catch (error) {
+        console.log(error)
+        return { success: false, message: "Failed to fetch expenses" }
+    }
+}
+
 export const deleteExpense = async(expenseId:number)=> {
     try {
         const user = await currentUser()
