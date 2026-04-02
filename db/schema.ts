@@ -4,6 +4,7 @@ export const incomes = pgTable('incomes',{
     id:serial('id').primaryKey(),
     name:varchar('name',{length:255}).notNull(),
     amount:bigint('amount',{mode:'number'}).notNull().default(0),
+    icon:varchar('icon'),
     createdAt:timestamp('created_at').defaultNow(),
     createdBy:varchar('created_by').notNull()
 })

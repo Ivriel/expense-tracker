@@ -58,7 +58,7 @@ export const updateIncome = async(id:number,data:Omit<InsertIncome,"id" | "creat
 export const getAllIncome = async()=> {
     try {
         const user = await currentUser()
-        const result = db.select(getTableColumns(incomes))
+        const result = await db.select(getTableColumns(incomes))
         .from(incomes)
         .where(eq(incomes.createdBy, user?.primaryEmailAddress?.emailAddress ?? ""))
         .orderBy(desc(incomes.createdAt))

@@ -25,7 +25,7 @@ export const createDashboardColumns = (
           Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
   },
   {
@@ -39,7 +39,7 @@ export const createDashboardColumns = (
           Expense Amount
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
       const amount = row.getValue("amount") as number;
@@ -62,16 +62,16 @@ export const createDashboardColumns = (
           From Budget Of
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
       const budgetName = row.getValue("budgetName") as string | null;
       return (
-       <Link href={`/dashboard/expenses/${row.original.budgetId}`}>
-        <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-purple-100 text-purple-800 ml-4">
-          {budgetName || "-"}
-        </span>
-       </Link>
+        <Link href={`/dashboard/expenses/${row.original.budgetId}`}>
+          <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-purple-100 text-purple-800 ml-4">
+            {budgetName || "-"}
+          </span>
+        </Link>
       );
     },
   },
@@ -86,22 +86,27 @@ export const createDashboardColumns = (
           Created At
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
       const date = row.getValue("createdAt") as Date | null;
       if (!date) return <div>-</div>;
       return (
         <div className="text-gray-500">
-          {new Date(date).toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "2-digit",
+          {new Date(date).toLocaleDateString("id-ID", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
             year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: false,
-          })}
+          })}{' '}|{' '}
+          {
+            new Date(date).toLocaleTimeString("id-ID", {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              hour12: false,
+            })
+          }
         </div>
       );
     },
