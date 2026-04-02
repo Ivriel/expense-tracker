@@ -17,8 +17,8 @@ import {
 import { getAllExpensesByBudgetId } from "@/server/expense";
 import { Expense } from "@/db/schema";
 import ExpenseListByBudgetIdTable from "../_components/ExpenseListByBudgetIdTable";
-import DeleteBudgetButton from "../_components/DeleteBudgetButton";
-import EditBudget from "../_components/EditBudget";
+import DeleteBudgetButton from "../../budgets/_components/DeleteBudgetButton";
+import EditBudget from "../../budgets/_components/EditBudget";
 
 export default function ExpenseDetailPage({
   params,

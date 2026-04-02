@@ -20,6 +20,24 @@ export const createExpense = async (data:Omit<InsertExpense,'id'|'createdAt'|'cr
     }
 }
 
+export const updateExpense = async(id:number,data:Omit<InsertExpense,'id'|'createdAt'|'createdBy'>)=> {
+    try {
+        const user = await currentUser()
+        const result = await db.update(expenses)
+         .set(data)
+         .where(
+            and(
+                eq(expenses.createdBy, user?.primaryEmailAddress?.emailAddress ?? ""),
+                eq(expenses.id, id) 
+            )
+        ).returning({updatedId:expenses.id})
+        return { success: true, message: "Expense updated successfully", result: result }
+    } catch (error) {
+        console.log(error)
+        return { success: false, message: "Failed to update expense" }
+    }
+}
+
 export const getAllExpensesByBudgetId = async(budgetId:number)=> {
     try {
         const user = await currentUser()

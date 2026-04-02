@@ -112,13 +112,17 @@ export const createDashboardColumns = (
     cell: ({ row }) => {
       const expense = row.original;
       return (
-        <DeleteExpenseButton expense={expense} refreshData={refreshData} />
+        <div className="flex gap-2">
+          <DeleteExpenseButton expense={expense} refreshData={refreshData} />
+          <EditExpense expense={expense} refreshData={refreshData} />
+        </div>
       );
     },
   },
 ];
 
 import ExpenseTableSkeleton from "../expenses/_components/ExpenseTableSkeleton";
+import EditExpense from "../expenses/_components/EditExpense";
 
 export default function ExpenseListTable({
   expenseList,

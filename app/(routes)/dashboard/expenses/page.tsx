@@ -13,7 +13,7 @@ export default async function ExpensesPage() {
 
   return (
     <div className="p-8">
-      <h2 className="font-bold text-3xl text-purple-600">All Expenses</h2>
+      <h2 className="font-bold text-3xl">All <span className="text-purple-600">Expenses</span> </h2>
       <p className="text-gray-500">
         Laporan penuh mendetail seluruh transaksi dari semua budget Anda.
       </p>
