@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Expense } from "@/db/schema";
 import DeleteExpenseButton from "./_components/DeleteExpenseButton";
+import EditExpense from "./_components/EditExpense";
 
 export const createColumns = (
   refreshData: () => void,
@@ -51,7 +52,11 @@ export const createColumns = (
     cell: ({ row }) => {
       const expense = row.original;
       return (
-        <DeleteExpenseButton expense={expense} refreshData={refreshData} />
+        // kasih tombol edit dan delete
+        <div className="flex gap-2">
+          <EditExpense expense={expense} refreshData={refreshData} />
+          <DeleteExpenseButton expense={expense} refreshData={refreshData} />
+        </div>
       );
     },
   },

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 export default function Hero() {
@@ -16,12 +17,12 @@ export default function Hero() {
         </p>
 
         <div className="mt-8 flex justify-center gap-4">
-          <a
+          <Link
             className="inline-flex items-center justify-center rounded-lg border border-indigo-600 bg-indigo-600 px-6 py-3 font-medium text-white shadow-sm transition-all hover:bg-indigo-700 hover:shadow-md"
-            href="#"
+            href="/dashboard"
           >
             Get Started
-          </a>
+          </Link>
 
           <a
             className="inline-flex items-center justify-center rounded-lg border border-slate-200 px-6 py-3 font-medium text-slate-700 shadow-sm transition-all hover:bg-slate-50 hover:text-slate-900 hover:shadow-md"

@@ -2,15 +2,18 @@
 import { useState } from 'react'
 import { BudgetWithStats } from '@/server/budget'
 import { PiggyBank, Receipt, Wallet, Eye, EyeOff } from 'lucide-react'
+import { Income } from '@/db/schema';
 
-export default function CardInfoDashboard({ budgetList, loading }: {
+export default function CardInfoDashboard({ budgetList, loading, incomeList }: {
   budgetList: BudgetWithStats[];
   loading: boolean;
+  incomeList:Income[]
 }) {
   const [show, setShow] = useState(true)
 
   const totalBudget = budgetList.reduce((sum, b) => sum + Number(b.amount), 0)
   const totalSpend = budgetList.reduce((sum, b) => sum + Number(b.totalSpend ?? 0), 0)
+  const totalIncome = incomeList.reduce((sum, i) => sum + Number(i.amount), 0)
 
   const display = (value: string) => show ? value : "Rp ••••••"
 
@@ -56,7 +59,8 @@ export default function CardInfoDashboard({ budgetList, loading }: {
       <div className='p-7 border rounded-lg flex items-center justify-between'>
         <div>
           <div className='flex items-center gap-2'>
-            <h2 className='text-sm'>Number Of Budget</h2>
+            {/* ganti jadi total income */}
+            <h2 className='text-sm'>Total Income</h2> 
             <button onClick={() => setShow(!show)}>
               {show
                 ? <Eye className='w-4 h-4 text-gray-400 cursor-pointer' />
@@ -65,7 +69,7 @@ export default function CardInfoDashboard({ budgetList, loading }: {
             </button>
           </div>
           <h2 className='font-bold text-2xl'>
-            {loading ? "..." : show ? budgetList.length : "••"}
+            {loading ? "..." : show ? `Rp ${totalIncome.toLocaleString("id-ID")}` : "••"}
           </h2>
         </div>
         <Wallet className='bg-purple-500 p-3 h-12 w-12 rounded-full text-white' />

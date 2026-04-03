@@ -1,16 +1,26 @@
 import { Income } from "@/db/schema";
-import Link from "next/link";
 
 export default function IncomeItem({ income }: { income: Income }) {
-  const formattedDate = new Date(income.createdAt!).toLocaleDateString("id-ID", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-
+  const formattedDate = new Date(income.createdAt!).toLocaleDateString(
+    "id-ID",
+    {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    },
+  );
+  const formattedTime = new Date(income.createdAt!).toLocaleTimeString(
+    "id-ID",
+    {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    },
+  );
   return (
-    <Link href={`/dashboard/incomes/${income.id}`}>
-      <div className="group relative p-5 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer overflow-hidden">
+      <div className="group relative p-5 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 overflow-hidden">
         {/* Top accent line */}
         <div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-emerald-400 to-teal-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
 
@@ -41,17 +51,10 @@ export default function IncomeItem({ income }: { income: Income }) {
         <div className="my-4 border-t border-slate-100" />
 
         {/* Meta */}
-        <div className="flex justify-between items-center">
-          <div>
-            <p className="text-xs text-slate-400">Created by</p>
-            <p className="text-sm text-slate-700">@{income.createdBy}</p>
+          <div className="flex justify-between items-center">
+            <p className="text-xs text-slate-400">Datetime Created</p>
+            <p className="text-sm text-slate-700">{formattedDate} | {formattedTime}</p>
           </div>
-          <div className="text-right">
-            <p className="text-xs text-slate-400">Date</p>
-            <p className="text-sm text-slate-700">{formattedDate}</p>
-          </div>
-        </div>
       </div>
-    </Link>
   );
 }

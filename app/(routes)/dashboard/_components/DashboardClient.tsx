@@ -5,9 +5,10 @@ import CardInfoDashboard from "./CardInfoDashboard";
 import { BudgetWithStats, getAllBudget } from "@/server/budget";
 import BarchartDashboard from "./BarChartDashboard";
 import BudgetItem from "../budgets/_components/BudgetItem";
-import { Expense } from "@/db/schema";
+import { Expense, Income } from "@/db/schema";
 import { getAllExpenses } from "@/server/expense";
 import ExpenseListTable from "./ExpenseListTable";
+import { getAllIncome } from "@/server/income";
 
 interface Props {
   userName: string;
@@ -17,6 +18,7 @@ interface Props {
 export default function DashboardClient({ userName }: Props) {
   const [budgetList, setBudgetList] = useState<BudgetWithStats[]>([]);
   const [expenseList, setExpenseList] = useState<Expense[]>([]);
+  const [incomeList, setIncomeList] = useState<Income[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchExpenses = useCallback(async () => {
@@ -38,9 +40,19 @@ export default function DashboardClient({ userName }: Props) {
     }
   }, [fetchExpenses]);
 
+  const fetchIncomes = useCallback(async () => {
+    setLoading(true);
+    const response = await getAllIncome();
+    if (response?.success && response.result) {
+      setIncomeList(response.result as Income[]);
+    }
+    setLoading(false);
+  }, []);
+
   useEffect(() => {
     fetchBudgets();
-  }, [fetchBudgets]);
+    fetchIncomes();
+  }, [fetchBudgets, fetchIncomes]);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -69,7 +81,7 @@ export default function DashboardClient({ userName }: Props) {
         menggunakan{" "}
         <span className="text-purple-600 font-bold">expense tracker</span>
       </p>
-      <CardInfoDashboard budgetList={budgetList} loading={loading} />
+      <CardInfoDashboard budgetList={budgetList} incomeList={incomeList} loading={loading} />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-2">
         <div className="lg:col-span-2 pt-2">
           <BarchartDashboard budgetList={budgetList} />

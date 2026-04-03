@@ -5,7 +5,7 @@ import React from "react";
 import { DataTable } from "../expenses/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import DeleteExpenseButton from "../expenses/_components/DeleteExpenseButton";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -112,15 +112,15 @@ export const createDashboardColumns = (
     },
   },
   {
+    // ganti jadi icon mata dan link ke /dashboard/expense/{budgetId}
     id: "actions",
     header: "Action",
     cell: ({ row }) => {
       const expense = row.original;
       return (
-        <div className="flex gap-2">
-          <DeleteExpenseButton expense={expense} refreshData={refreshData} />
-          <EditExpense expense={expense} refreshData={refreshData} />
-        </div>
+       <Link href={`/dashboard/expenses/${expense.budgetId}`}>
+        <Eye className="w-4 h-4 text-gray-400 cursor-pointer" />
+       </Link>
       );
     },
   },
