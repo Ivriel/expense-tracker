@@ -4,6 +4,8 @@ import { db } from "@/db/drizzle"
 import { Budget, budgets, expenses, InsertBudget } from "@/db/schema"
 import { currentUser } from "@clerk/nextjs/server"
 import {  and, desc, eq, getTableColumns, sql } from "drizzle-orm"
+import { buildDateFilter } from "./dateFilter"
+import { TimeRangeType } from "@/store/useFilterStore"
 
 
 export const createBudget = async (data: Omit<InsertBudget, "id" | "createdAt" | "createdBy">) => {
@@ -24,9 +26,11 @@ export const createBudget = async (data: Omit<InsertBudget, "id" | "createdAt" |
     }
 }
 
-export const getAllBudget = async() => {
+export const getAllBudget = async(filterParams?: { month?: number; year?: number; type: TimeRangeType }) => {
     try {
         const user = await currentUser()
+        const dateFilter = buildDateFilter(filterParams, budgets.createdAt);
+        
         const result = await db.select({
             ...getTableColumns(budgets),//mengambil semua kolom dari sebuah tabel secara otomatis dan menyebarkan semua kolom tabel budgets ke dalam select object, jadi kamu tidak perlu tulis satu-satu seperti id, name, amount, dll.
             totalSpend:sql `sum(${expenses.amount})`.mapWith(Number), // ngitung jumlah amount nya (total jumlah pengeluaran) map with adalah method Drizzle untuk mengkonversi hasil query ke tipe JavaScript Number, karena hasil dari SQL aggregate function biasanya return sebagai string
@@ -34,7 +38,12 @@ export const getAllBudget = async() => {
         }).from(budgets)
         .leftJoin(expenses,eq(budgets.id,expenses.budgetId)) // ambil semua budget, dan jika ada expense yang budgetId-nya cocok dengan budgets.id, gabungkan datanya. Budget yang tidak punya expense tetap muncul (karena LEFT JOIN).
         .groupBy(budgets.id) // Karena kita pakai SUM() dan COUNT() (aggregate functions), data harus dikelompokkan. Di sini dikelompokkan per budgets.id sehingga setiap budget punya satu baris dengan total spend dan total items-nya sendiri
-        .where(eq(budgets.createdBy,user?.primaryEmailAddress?.emailAddress ?? ""))
+        .where(
+            and(
+                eq(budgets.createdBy,user?.primaryEmailAddress?.emailAddress ?? ""),
+                dateFilter
+            )
+        )
         .orderBy(desc(budgets.createdAt))
         console.log(result)
         return { success: true, message: "Budget fetched successfully", result: result }

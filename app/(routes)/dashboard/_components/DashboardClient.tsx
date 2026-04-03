@@ -9,6 +9,7 @@ import { Expense, Income } from "@/db/schema";
 import { getAllExpenses } from "@/server/expense";
 import ExpenseListTable from "./ExpenseListTable";
 import { getAllIncome } from "@/server/income";
+import { useFilterStore } from "@/store/useFilterStore";
 
 interface Props {
   userName: string;
@@ -20,39 +21,34 @@ export default function DashboardClient({ userName }: Props) {
   const [expenseList, setExpenseList] = useState<Expense[]>([]);
   const [incomeList, setIncomeList] = useState<Income[]>([]);
   const [loading, setLoading] = useState(true);
+  const { getFilterParams } = useFilterStore();
 
-  const fetchExpenses = useCallback(async () => {
-    const response = await getAllExpenses();
-    if (response?.success && response.result) {
-      setExpenseList(response.result as Expense[]);
-    }
-    setLoading(false);
-  }, []);
-
-  const fetchBudgets = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
-    const response = await getAllBudget();
-    if (response?.success && response.result) {
-      setBudgetList(response.result as BudgetWithStats[]);
-      await fetchExpenses();
-    } else {
-      setLoading(false);
-    }
-  }, [fetchExpenses]);
+    const filterParams = getFilterParams();
 
-  const fetchIncomes = useCallback(async () => {
-    setLoading(true);
-    const response = await getAllIncome();
-    if (response?.success && response.result) {
-      setIncomeList(response.result as Income[]);
+    const [budgetsRes, expensesRes, incomesRes] = await Promise.all([
+      getAllBudget(filterParams),
+      getAllExpenses(filterParams),
+      getAllIncome(filterParams)
+    ]);
+
+    if (budgetsRes?.success && budgetsRes.result) {
+      setBudgetList(budgetsRes.result as BudgetWithStats[]);
     }
+    if (expensesRes?.success && expensesRes.result) {
+      setExpenseList(expensesRes.result as Expense[]);
+    }
+    if (incomesRes?.success && incomesRes.result) {
+      setIncomeList(incomesRes.result as Income[]);
+    }
+
     setLoading(false);
-  }, []);
+  }, [getFilterParams]);
 
   useEffect(() => {
-    fetchBudgets();
-    fetchIncomes();
-  }, [fetchBudgets, fetchIncomes]);
+    fetchData();
+  }, [fetchData]);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -92,13 +88,13 @@ export default function DashboardClient({ userName }: Props) {
           ))}
         </div>
       </div>
-      
+
       <div className="mt-6 mb-4">
         <h2 className="font-bold text-xl mb-3 text-purple-600">Last Expenses</h2>
-        <ExpenseListTable 
-          expenseList={expenseList.slice(0, 5)} 
+        <ExpenseListTable
+          expenseList={expenseList.slice(0, 5)}
           budgetList={budgetList}
-          refreshData={fetchExpenses} 
+          refreshData={fetchData}
           loading={loading}
         />
       </div>

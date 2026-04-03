@@ -4,6 +4,8 @@ import { db } from "@/db/drizzle"
 import { InsertExpense, expenses } from "@/db/schema"
 import { currentUser } from "@clerk/nextjs/server"
 import { and, desc, eq } from "drizzle-orm"
+import { buildDateFilter } from "./dateFilter"
+import { TimeRangeType } from "@/store/useFilterStore"
 
 export const createExpense = async (data:Omit<InsertExpense,'id'|'createdAt'|'createdBy'>) => {
     try {
@@ -57,12 +59,17 @@ export const getAllExpensesByBudgetId = async(budgetId:number)=> {
     }
 }
 
-export const getAllExpenses = async()=> {
+export const getAllExpenses = async(filterParams?: { month?: number; year?: number; type: TimeRangeType })=> {
     try {
         const user = await currentUser()
+        const dateFilter = buildDateFilter(filterParams, expenses.createdAt);
+        
         const result = await db.select().from(expenses)
          .where(
-            eq(expenses.createdBy, user?.primaryEmailAddress?.emailAddress ?? "")
+            and(
+                eq(expenses.createdBy, user?.primaryEmailAddress?.emailAddress ?? ""),
+                dateFilter
+            )
         )
         .orderBy(desc(expenses.createdAt))
         console.log("result",result)

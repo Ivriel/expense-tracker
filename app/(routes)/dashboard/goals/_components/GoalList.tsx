@@ -1,45 +1,45 @@
 "use client"
 import { useCallback, useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { Income } from "@/db/schema";
-import { getAllIncome } from "@/server/income";
-import CreateIncome from "./CreateIncome";
-import IncomeItem from "./IncomeItem";
-import IncomeListSkeleton from "./IncomeListSkeleton";
+import { Goal } from "@/db/schema";
+import { getAllGoals } from "@/server/goal";
+import CreateGoal from "./CreateGoal";
+import GoalItem from "./GoalItem";
+import GoalListSkeleton from "./GoalListSkeleton";
 import { useFilterStore } from "@/store/useFilterStore";
 
-export default function IncomeList() {
+export default function GoalList() {
   const { user } = useUser();
-  const [incomeList, setIncomeList] = useState<Income[]>([]);
+  const [goalList, setGoalList] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
   const { getFilterParams } = useFilterStore();
 
-  const fetchIncomes = useCallback(async () => {
+  const fetchGoals = useCallback(async () => {
     if (!user) return;
     setLoading(true);
     const filterParams = getFilterParams();
-    const response = await getAllIncome(filterParams);
+    const response = await getAllGoals(filterParams);
     if (response?.success && response.result) {
-      setIncomeList(response.result as Income[]);
+      setGoalList(response.result as Goal[]);
     }
     setLoading(false);
   }, [user, getFilterParams]);
 
   useEffect(() => {
-    fetchIncomes();
-  }, [fetchIncomes]);
+    fetchGoals();
+  }, [fetchGoals]);
 
   return (
     <div className="mt-7">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch">
-        <CreateIncome refreshData={fetchIncomes} />
+        <CreateGoal refreshData={fetchGoals} />
         {loading ? (
           [1, 2, 3, 4, 5].map((item, index) => (
-            <IncomeListSkeleton key={index} />
+            <GoalListSkeleton key={index} />
           ))
         ) : (
-          incomeList.map((income, index) => (
-            <IncomeItem income={income} key={index} />
+          goalList.map((goal, index) => (
+            <GoalItem goal={goal} key={index} refreshData={fetchGoals} />
           )))}
       </div>
     </div>
