@@ -66,7 +66,7 @@ export default function DashboardClient({ userName }: Props) {
     const hour = new Date().getHours();
     if (hour < 12) return "🌅";
     if (hour < 18) return "☀️";
-    if (hour < 21) return "🌇";
+    if (hour < 19) return "🌇";
     return "🌙";
   };
 
